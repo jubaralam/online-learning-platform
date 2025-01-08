@@ -211,3 +211,401 @@ Deletes a user account based on the provided `id`.
 
 
 
+# Course API Routes Documentation
+
+## Base URL
+`/api/courses`
+
+---
+
+## Routes
+
+### 1. Create a New Course
+**Endpoint:** `POST /create`
+
+**Middleware:**
+- `auth`
+- `authorizeInstructorOrAdmin`
+
+**Description:** Allows an authenticated instructor or admin to create a new course.
+
+**Request Body:**
+```json
+{
+  "poster": "string (URL)",
+  "title": "string",
+  "description": "string",
+  "mode": "string (e.g., Online or Offline)",
+  "language": "string",
+  "price": "number",
+  "discount_price": "number",
+  "total_content": "number",
+  "course_duration": "number (in weeks)"
+}
+```
+
+**Response:**
+- **Success (200):**
+```json
+{
+  "message": "new course has been added"
+}
+```
+- **Error (500):**
+```json
+{
+  "error": "error message"
+}
+```
+
+---
+
+### 2. Get Course by ID
+**Endpoint:** `GET /:id`
+
+**Description:** Retrieves a specific course by its ID.
+
+**Path Parameters:**
+- `id` (string): ID of the course to retrieve.
+
+**Response:**
+- **Success (201):**
+```json
+{
+  "data": { "course details object" }
+}
+```
+- **Error (500):**
+```json
+{
+  "error": "error message"
+}
+```
+
+---
+
+### 3. Get All Courses
+**Endpoint:** `GET /`
+
+**Description:** Retrieves all courses available in the database.
+
+**Response:**
+- **Success (200):**
+```json
+{
+  "data": [
+    { "course details object" },
+    { "course details object" }
+  ]
+}
+```
+- **Error (500):**
+```json
+{
+  "message": "error message"
+}
+```
+
+---
+
+### 4. Update Course
+**Endpoint:** `PUT /update/:id`
+
+**Middleware:**
+- `auth`
+- `authorizeInstructorOrAdmin`
+
+**Description:** Allows an authenticated instructor or admin to update a course.
+
+**Path Parameters:**
+- `id` (string): ID of the course to update.
+
+**Request Body:**
+```json
+{
+  "poster": "string (optional)",
+  "title": "string (optional)",
+  "description": "string (optional)",
+  "mode": "string (optional)",
+  "language": "string (optional)",
+  "price": "number (optional)",
+  "discount_price": "number (optional)",
+  "total_content": "number (optional)",
+  "course_duration": "number (optional)"
+}
+```
+
+**Response:**
+- **Success (200):**
+```json
+{
+  "message": "course has updated",
+  "data": { "updated course object" }
+}
+```
+- **Error (500):**
+```json
+{
+  "error": "error message"
+}
+```
+
+---
+
+### 5. Delete Course
+**Endpoint:** `DELETE /delete/:id`
+
+**Middleware:**
+- `auth`
+- `authorizeInstructorOrAdmin`
+
+**Description:** Allows an authenticated instructor or admin to delete a course.
+
+**Path Parameters:**
+- `id` (string): ID of the course to delete.
+
+**Response:**
+- **Success:**
+```json
+{
+  "message": "course has been deleted"
+}
+```
+- **Error (404):**
+```json
+{
+  "message": "course detail not found"
+}
+```
+- **Error (500):**
+```json
+{
+  "error": "error message"
+}
+```
+
+---
+
+## Error Codes
+- **401 Unauthorized:** User does not have the required permissions.
+- **404 Not Found:** Resource not found.
+- **500 Internal Server Error:** An error occurred on the server.
+
+## Middleware Used
+1. **auth:** Validates the JWT token provided in the `Authorization` header.
+2. **authorizeInstructorOrAdmin:** Ensures the user has the role of `instructor` or `admin`.
+
+
+
+# Course Module API Documentation
+
+## Base URL: `/api/course-module`
+
+### Middleware
+- **auth**: Ensures that the user is authenticated.
+- **authorizeInstructorOrAdmin**: Ensures that the user has instructor or admin privileges.
+
+---
+
+## Endpoints
+
+### 1. **Create a Course Module**
+#### **POST** `/create`
+
+This endpoint allows authorized instructors or admins to create a new course module.
+
+#### Request Headers
+- `Authorization`: Bearer `<token>`
+
+#### Request Body
+```json
+{
+  "course_Id": "<course_id>",
+  "title": "<module_title>",
+  "content": ["<content1>", "<content2>", ...],
+  "video_link": "<video_link_url>"
+}
+```
+
+#### Response
+- **201**: Module created successfully.
+  ```json
+  {
+    "message": "course content has been created"
+  }
+  ```
+- **400**: Missing required fields.
+  ```json
+  {
+    "message": "All fields are required"
+  }
+  ```
+- **500**: Server error.
+  ```json
+  {
+    "message": "<error_message>"
+  }
+  ```
+
+---
+
+### 2. **Get Modules by Course ID**
+#### **GET** `/:courseId`
+
+This endpoint retrieves all modules related to a specific course.
+
+#### URL Parameters
+- `courseId`: The ID of the course.
+
+#### Response
+- **200**: Modules retrieved successfully.
+  ```json
+  {
+    "data": [
+      {
+        "_id": "<module_id>",
+        "course_Id": "<course_id>",
+        "instructor_Id": "<instructor_id>",
+        "title": "<module_title>",
+        "content": ["<content1>", "<content2>", ...],
+        "video_link": "<video_link_url>"
+      }
+    ]
+  }
+  ```
+- **404**: No modules found.
+  ```json
+  {
+    "message": "module not found"
+  }
+  ```
+- **500**: Server error.
+  ```json
+  {
+    "error": "<error_message>"
+  }
+  ```
+
+---
+
+### 3. **Update a Module**
+#### **PUT** `/update/:moduleId`
+
+This endpoint allows authorized instructors or admins to update a course module.
+
+#### URL Parameters
+- `moduleId`: The ID of the module to update.
+
+#### Request Headers
+- `Authorization`: Bearer `<token>`
+
+#### Request Body
+At least one of the following fields must be provided:
+```json
+{
+  "title": "<new_title>",
+  "content": ["<updated_content1>", "<updated_content2>", ...],
+  "video_link": "<new_video_link_url>"
+}
+```
+
+#### Response
+- **200**: Module updated successfully.
+  ```json
+  {
+    "message": "module has updated",
+    "data": {
+      "_id": "<module_id>",
+      "course_Id": "<course_id>",
+      "instructor_Id": "<instructor_id>",
+      "title": "<updated_title>",
+      "content": ["<updated_content1>", "<updated_content2>", ...],
+      "video_link": "<updated_video_link_url>"
+    }
+  }
+  ```
+- **403**: User not authorized to update the module.
+  ```json
+  {
+    "message": "you are not authorized"
+  }
+  ```
+- **404**: Module not found or update failed.
+  ```json
+  {
+    "message": "something went wrong"
+  }
+  ```
+- **500**: Server error.
+  ```json
+  {
+    "error": "<error_message>"
+  }
+  ```
+
+---
+
+### 4. **Delete a Module**
+#### **DELETE** `/delete/:moduleId`
+
+This endpoint allows authorized instructors or admins to delete a course module.
+
+#### URL Parameters
+- `moduleId`: The ID of the module to delete.
+
+#### Request Headers
+- `Authorization`: Bearer `<token>`
+
+#### Response
+- **204**: Module deleted successfully.
+- **403**: User not authorized to delete the module.
+  ```json
+  {
+    "message": "you are not authorized"
+  }
+  ```
+- **404**: Module not found or deletion failed.
+  ```json
+  {
+    "message": "something went wrong"
+  }
+  ```
+- **500**: Server error.
+  ```json
+  {
+    "error": "<error_message>"
+  }
+  ```
+
+---
+
+## Schema
+
+### Course Module Schema
+```json
+{
+  "course_Id": {
+    "type": "ObjectId",
+    "required": true,
+    "ref": "course"
+  },
+  "instructor_Id": {
+    "type": "ObjectId",
+    "required": true,
+    "ref": "user"
+  },
+  "title": {
+    "type": "String",
+    "required": true
+  },
+  "content": {
+    "type": "Array",
+    "required": true
+  },
+  "video_link": {
+    "type": "String",
+    "required": true
+  }
+}
+```
+

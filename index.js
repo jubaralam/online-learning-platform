@@ -14,6 +14,14 @@ const userRouter = require("./Routes/user")
 server.use("/api/user", userRouter)
 
 
+//course routes 
+const courseRouter = require("./Routes/course")
+server.use("/api/course", courseRouter)
+
+
+//course module routes
+const courseModuleRouter = require("./Routes/courseModule")
+server.use("/api/course-module",courseModuleRouter)
 
 
 server.listen(PORT, async()=>{
