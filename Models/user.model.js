@@ -13,6 +13,7 @@ const userSchema = mongoose.Schema({
   preferred_language: { type: String, default: null },
   learning_goals: { type: String, default: null },
   dob: { type: Date, default: null },
+  age:{type:Number, default:null}
 });
 
 const UserModel = mongoose.model("user", userSchema);

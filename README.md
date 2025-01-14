@@ -829,5 +829,156 @@ Retrieve all courses a learner is enrolled in.
 
 ---
 
-This API facilitates efficient management of course enrollments, payments, and related details.
+
+
+# Admin Router API Documentation
+
+This documentation describes the API routes provided by the `adminRouter` for managing users, courses, and instructors. All routes are part of the admin module and are defined in `adminRouter`.
+
+---
+
+## User Routes bash user domain-name/api/admin
+
+### 1. Get User by ID
+**Endpoint**: `GET /user/:id`
+
+**Description**: Fetches details of a user by their ID.
+
+**Request Parameters**:
+- `id` (Path): User's unique identifier.
+
+**Responses**:
+- `200`: Returns user data.
+- `404`: User not found.
+- `500`: Server error.
+
+---
+
+### 2. Update User Details
+**Endpoint**: `PUT /user/update/:id`
+
+**Description**: Updates the details of a user by their ID.
+
+**Request Parameters**:
+- `id` (Path): User's unique identifier.
+
+**Request Body**:
+- `name`, `email`, `phone_no`, `age`, `dob`, `gender`, `profile_picture`, `city`, `highest_qualification`, `preferred_language`, `learning_goals`, `role` (Optional): Updated user details.
+
+**Responses**:
+- `200`: Returns updated user data.
+- `404`: User not found.
+- `500`: Server error.
+
+---
+
+### 3. Get All Users
+**Endpoint**: `GET /users`
+
+**Description**: Fetches all users with the role of "learner."
+
+**Responses**:
+- `200`: Returns an array of users.
+- `403`: Unauthorized access.
+- `500`: Server error.
+
+---
+
+### 4. Delete User by ID
+**Endpoint**: `DELETE /user/remove/:id`
+
+**Description**: Deletes a user by their ID.
+
+**Request Parameters**:
+- `id` (Path): User's unique identifier.
+
+**Responses**:
+- `200`: Returns deleted user data.
+- `404`: User not found.
+- `500`: Server error.
+
+---
+
+### 5. Get All Instructors
+**Endpoint**: `GET /instructors`
+
+**Description**: Fetches all users with the role of "instructor."
+
+**Responses**:
+- `200`: Returns an array of instructors.
+- `404`: No instructors found.
+- `500`: Server error.
+
+---
+
+## Course Routes
+
+### 1. Get All Courses
+**Endpoint**: `GET /courses`
+
+**Description**: Fetches all available courses.
+
+**Responses**:
+- `200`: Returns an array of courses.
+- `404`: No courses found.
+- `500`: Server error.
+
+---
+
+### 2. Get Course by ID
+**Endpoint**: `GET /course/:id`
+
+**Description**: Fetches details of a specific course by its ID.
+
+**Request Parameters**:
+- `id` (Path): Course's unique identifier.
+
+**Responses**:
+- `200`: Returns course data.
+- `404`: Course not found.
+- `500`: Server error.
+
+---
+
+### 3. Update Course by ID
+**Endpoint**: `PUT /course/update/:id`
+
+**Description**: Updates the details of a specific course by its ID.
+
+**Request Parameters**:
+- `id` (Path): Course's unique identifier.
+
+**Request Body**:
+- `poster`, `title`, `description`, `mode`, `language`, `price`, `discount_price`, `total_content`, `course_duration` (Optional): Updated course details.
+
+**Responses**:
+- `200`: Returns updated course data.
+- `404`: Course not found.
+- `500`: Server error.
+
+---
+
+### 4. Delete Course by ID
+**Endpoint**: `DELETE /course/remove/:id`
+
+**Description**: Deletes a specific course by its ID.
+
+**Request Parameters**:
+- `id` (Path): Course's unique identifier.
+
+**Responses**:
+- `200`: Returns deleted course data.
+- `404`: Course not found.
+- `500`: Server error.
+
+---
+
+## Notes
+- All endpoints are part of the `adminRouter` and require appropriate permissions for access.
+- Ensure proper error handling and authentication for secure operations.
+
+---
+
+For additional details, refer to the code implementation or contact the API administrator.
+
 

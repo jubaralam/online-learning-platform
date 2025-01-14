@@ -148,9 +148,6 @@ enrollmentRouter.get("/payment/:paymentId", async (req, res) => {
 });
 
 //get all enrolled courses
-
-
-
 enrollmentRouter.get("/get-all-courses", async (req, res) => {
   const {_id} = req.user
   try {

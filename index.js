@@ -11,6 +11,8 @@ const connection = require("./Config/db");
 // authentication middleware
 const auth = require("./middleware/auth");
 
+// admin and instructor middleware
+const authorizeInstructorOrAdmin = require("./middleware/authorizeInstructorOrAdmin");
 // user router
 const userRouter = require("./Routes/user");
 server.use("/api/user", userRouter);
@@ -26,16 +28,20 @@ server.use("/api/course-module", courseModuleRouter);
 const enrollmentRouter = require("./Routes/enrollment");
 server.use("/api/course/enrollment", auth, enrollmentRouter);
 
+//admin routes
+const adminRouter = require("./Routes/admin");
+server.use("/api/admin", [auth, authorizeInstructorOrAdmin], adminRouter);
 
-server.get("/",async(req, res)=>{
+server.get("/", async (req, res) => {
   try {
-    res.write("welcome to new adge Online Learning Platform")
-    res.status(200).send({"message":"welcome to new adge Online Learning Platform"})
+    res.write("welcome to new adge Online Learning Platform");
+    res
+      .status(200)
+      .send({ message: "welcome to new adge Online Learning Platform" });
   } catch (error) {
-    res.status(500).send({"error":error.message})
+    res.status(500).send({ error: error.message });
   }
-})
-
+});
 
 server.listen(PORT, async () => {
   try {

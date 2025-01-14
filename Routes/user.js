@@ -56,10 +56,11 @@ userRouter.post("/login", async (req, res) => {
           expiresIn: "24h",
         }
       );
-      res.status(201)
+      res
+        .status(201)
         .send({ message: "you have logged in successfully", token: token });
-    }else{
-      res.send({"messasge":"Incorrect password"})
+    } else {
+      res.send({ messasge: "Incorrect password" });
     }
   } catch (error) {
     res.status(500).send({ error: error.message });
@@ -68,7 +69,19 @@ userRouter.post("/login", async (req, res) => {
 
 // for updation
 userRouter.put("/update/:id", auth, async (req, res) => {
-  const { name, email, phone_no } = req.body;
+  const {
+    name,
+    email,
+    phone_no,
+    age,
+    dob,
+    gender,
+    profile_picture,
+    city,
+    highest_qualification,
+    preferred_language,
+    learning_goals,
+  } = req.body;
   const { id } = req.params;
   try {
     if (req.user._id !== id || req.user.role !== "admin") {
@@ -78,6 +91,15 @@ userRouter.put("/update/:id", auth, async (req, res) => {
     if (name) data.name = name;
     if (email) data.email = email;
     if (phone_no) data.phone_no = phone_no;
+    if (age) data.age = age;
+    if (dob) data.dob = dob;
+    if (gender) data.gender = gender;
+    if (profile_picture) data.profile_picture = profile_picture;
+    if (city) data.city = city;
+    if (highest_qualification)
+      data.highest_qualification = highest_qualification;
+    if (preferred_language) data.preferred_language = preferred_language;
+    if (learning_goals) data.learning_goals = learning_goals;
     const update = await UserModel.findByIdAndUpdate(id, data, { new: true });
     res.status(201).send({ message: "your profile has updated", data: update });
   } catch (error) {
