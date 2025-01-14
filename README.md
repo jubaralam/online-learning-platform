@@ -979,6 +979,140 @@ This documentation describes the API routes provided by the `adminRouter` for ma
 
 ---
 
-For additional details, refer to the code implementation or contact the API administrator.
+
+# API Documentation for Admin Routes
+
+## Base URL `domain-name/api/admin`
+
+
+---
+
+## Enrollment Management
+
+### 1. Get All Enrollments
+**Endpoint:** `/enrollments`
+
+**Method:** `GET`
+
+**Description:** Retrieve all enrollment records.
+
+**Response:**
+- **200 OK:** Returns a list of all enrollments.
+- **404 Not Found:** No enrollment details found.
+- **500 Internal Server Error:** An error occurred on the server.
+
+**Sample Response:**
+```json
+{
+  "data": [
+    {
+      "_id": "64bcf3a7e0a7b5f5d8a8b1e3",
+      "course_Id": "64bcf3a7e0a7b5f5d8a8b1e2",
+      "learner_Id": "64bcf3a7e0a7b5f5d8a8b1e1",
+      "status": "active",
+      "progress_percentage": 70
+    }
+  ]
+}
+```
+
+---
+
+### 2. Get Enrollment Details by ID
+**Endpoint:** `/enrollment/:id`
+
+**Method:** `GET`
+
+**Description:** Retrieve details of a specific enrollment by its ID.
+
+**Parameters:**
+- **Path Parameter:** `id` - The ID of the enrollment.
+
+**Response:**
+- **200 OK:** Returns enrollment details.
+- **404 Not Found:** Enrollment not found.
+- **500 Internal Server Error:** An error occurred on the server.
+
+**Sample Response:**
+```json
+{
+  "data": {
+    "_id": "64bcf3a7e0a7b5f5d8a8b1e3",
+    "course_Id": "64bcf3a7e0a7b5f5d8a8b1e2",
+    "learner_Id": "64bcf3a7e0a7b5f5d8a8b1e1",
+    "status": "active",
+    "progress_percentage": 70
+  }
+}
+```
+
+---
+
+### 3. Update Enrollment Details
+**Endpoint:** `/enrollment/update/:id`
+
+**Method:** `PUT`
+
+**Description:** Update details of a specific enrollment.
+
+**Parameters:**
+- **Path Parameter:** `id` - The ID of the enrollment to update.
+- **Body Parameters (Optional):**
+  - `learner_Id`: The ID of the learner.
+  - `status`: The current status of the enrollment.
+  - `course_Id`: The ID of the course.
+  - `progress_percentage`: The progress percentage of the learner in the course.
+
+**Response:**
+- **200 OK:** Enrollment successfully updated.
+- **404 Not Found:** Enrollment not found.
+- **500 Internal Server Error:** An error occurred on the server.
+
+**Sample Response:**
+```json
+{
+  "message": "enrollment has successfully updated",
+  "data": {
+    "_id": "64bcf3a7e0a7b5f5d8a8b1e3",
+    "course_Id": "64bcf3a7e0a7b5f5d8a8b1e2",
+    "learner_Id": "64bcf3a7e0a7b5f5d8a8b1e1",
+    "status": "completed",
+    "progress_percentage": 100
+  }
+}
+```
+
+---
+
+### 4. Delete Enrollment by ID
+**Endpoint:** `/enrollment/remove/:id`
+
+**Method:** `DELETE`
+
+**Description:** Delete a specific enrollment by its ID.
+
+**Parameters:**
+- **Path Parameter:** `id` - The ID of the enrollment to delete.
+
+**Response:**
+- **200 OK:** Enrollment successfully deleted.
+- **404 Not Found:** Enrollment not found.
+- **500 Internal Server Error:** An error occurred on the server.
+
+**Sample Response:**
+```json
+{
+  "message": "enrollment detail has been deleted",
+  "data": {
+    "_id": "64bcf3a7e0a7b5f5d8a8b1e3",
+    "course_Id": "64bcf3a7e0a7b5f5d8a8b1e2",
+    "learner_Id": "64bcf3a7e0a7b5f5d8a8b1e1",
+    "status": "completed",
+    "progress_percentage": 100
+  }
+}
+```
+
+---
 
 

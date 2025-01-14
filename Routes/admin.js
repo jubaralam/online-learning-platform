@@ -14,6 +14,7 @@ const PaymentModel = require("../Models/payment.model");
 
 // User model
 const UserModel = require("../Models/user.model");
+const enrollmentRouter = require("./enrollment");
 
 //get user by user id
 adminRouter.get("/user/:id", async (req, res) => {
@@ -199,7 +200,6 @@ adminRouter.put("/course/update/:id", async (req, res) => {
   }
 });
 
-
 //delete a specific course
 adminRouter.delete("/course/remove/:id", async (req, res) => {
   const { id } = req.params;
@@ -208,16 +208,91 @@ adminRouter.delete("/course/remove/:id", async (req, res) => {
     if (!course) {
       return res.status(404).send({ message: "course not found" });
     }
-    res.status(200).send({message:"course has been deleted", data: course });
+    res.status(200).send({ message: "course has been deleted", data: course });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
 });
 
+// get all enrollments
+adminRouter.get("/enrollments", async (req, res) => {
+  try {
+    const enrollments = await EnrollmentModel.find();
+    if (!enrollments) {
+      return res.status(404).send({ message: "enrollment detail not found" });
+    }
 
+    res.status(200).send({ data: enrollments });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
 
+//get a enrollment details
+adminRouter.get("/enrollment/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const enrollments = await EnrollmentModel.findById({ _id: id });
+    if (!enrollments) {
+      return res.status(404).send({ message: "enrollment detail not found" });
+    }
 
+    res.status(200).send({ data: enrollments });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
 
+adminRouter.put("/enrollment/update/:id", async (req, res) => {
+  const { id } = req.params;
+  const { learner_Id, status, course_Id, progress_percentage } = req.body;
+  try {
+    const data = {};
 
+    if (learner_Id) data.learner_Id = learner_Id;
+    if (status) data.status = status;
+    if (course_Id) data.course_Id = course_Id;
+    if (progress_percentage) data.progress_percentage = progress_percentage;
 
+    const enrollments = await EnrollmentModel.findByIdAndUpdate(
+      { _id: id },
+      data,
+      { new: true }
+    );
+    if (!enrollments) {
+      return res.status(404).send({ message: "enrollment detail not found" });
+    }
+
+    res
+      .status(200)
+      .send({
+        message: "enrollment has successfully updated",
+        data: enrollments,
+      });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
+adminRouter.delete("/enrollment/remove/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const enrollments = await EnrollmentModel.findByIdAndDelete(
+      { _id: id },
+      { new: true }
+    );
+    if (!enrollments) {
+      return res.status(404).send({ message: "enrollment detail not found" });
+    }
+
+    res
+      .status(200)
+      .send({
+        message: "enrollment detail has been deleted",
+        data: enrollments,
+      });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
 module.exports = adminRouter;
