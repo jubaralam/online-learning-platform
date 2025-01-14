@@ -26,6 +26,17 @@ server.use("/api/course-module", courseModuleRouter);
 const enrollmentRouter = require("./Routes/enrollment");
 server.use("/api/course/enrollment", auth, enrollmentRouter);
 
+
+server.get("/",async(req, res)=>{
+  try {
+    res.write("welcome to new adge Online Learning Platform")
+    res.status(200).send({"message":"welcome to new adge Online Learning Platform"})
+  } catch (error) {
+    res.status(500).send({"error":error.message})
+  }
+})
+
+
 server.listen(PORT, async () => {
   try {
     await connection;
