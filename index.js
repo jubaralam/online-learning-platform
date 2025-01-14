@@ -29,8 +29,13 @@ const enrollmentRouter = require("./Routes/enrollment");
 server.use("/api/course/enrollment", auth, enrollmentRouter);
 
 //admin routes
+const adminMiddleware = require("./middleware/admin.middleware");
 const adminRouter = require("./Routes/admin");
-server.use("/api/admin", [auth, authorizeInstructorOrAdmin], adminRouter);
+server.use(
+  "/api/admin",
+  [auth, authorizeInstructorOrAdmin, adminMiddleware],
+  adminRouter
+);
 
 server.get("/", async (req, res) => {
   try {

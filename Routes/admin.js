@@ -1,5 +1,5 @@
 const express = require("express");
-
+const mongoose = require("mongoose");
 const adminRouter = express.Router();
 // course model
 const CourseModel = require("../Models/course.model");
@@ -263,12 +263,10 @@ adminRouter.put("/enrollment/update/:id", async (req, res) => {
       return res.status(404).send({ message: "enrollment detail not found" });
     }
 
-    res
-      .status(200)
-      .send({
-        message: "enrollment has successfully updated",
-        data: enrollments,
-      });
+    res.status(200).send({
+      message: "enrollment has successfully updated",
+      data: enrollments,
+    });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
@@ -285,14 +283,148 @@ adminRouter.delete("/enrollment/remove/:id", async (req, res) => {
       return res.status(404).send({ message: "enrollment detail not found" });
     }
 
-    res
-      .status(200)
-      .send({
-        message: "enrollment detail has been deleted",
-        data: enrollments,
-      });
+    res.status(200).send({
+      message: "enrollment detail has been deleted",
+      data: enrollments,
+    });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
 });
+
+//get all payments details
+adminRouter.get("/payment/details/", async (req, res) => {
+  //   const { learner_Id } = req.params;
+  try {
+    const paymentDetail = await PaymentModel.aggregate([
+      {
+        $lookup: {
+          from: "enrollments",
+          localField: "enrollment_Id",
+          foreignField: "_id",
+          as: "payment_details",
+        },
+      },
+      {
+        $unwind: "$payment_details",
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "learner_Id",
+          foreignField: "_id",
+          as: "user_detail",
+        },
+      },
+      {
+        $unwind: "$user_detail",
+      },
+    ]);
+    if (paymentDetail.length <= 0) {
+      return res.status(404).send({ message: "payment detail not found" });
+    }
+    res.status(200).send({ data: paymentDetail });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
+//get all payment of a learner
+adminRouter.get("/payment/learner-details/:learner_Id", async (req, res) => {
+  const { learner_Id } = req.params;
+
+  try {
+    const paymentDetail = await PaymentModel.aggregate([
+      {
+        $match: { learner_Id: new mongoose.Types.ObjectId(learner_Id) },
+      },
+      {
+        $lookup: {
+          from: "enrollments",
+          localField: "enrollment_Id",
+          foreignField: "_id",
+          as: "enrollment_details",
+        },
+      },
+      {
+        $unwind: "$enrollment_details",
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "learner_Id",
+          foreignField: "_id",
+          as: "user_detail",
+        },
+      },
+      {
+        $unwind: "$user_detail",
+      },
+    ]);
+
+    if (paymentDetail.length <= 0) {
+      return res
+        .status(404)
+        .send({
+          message: "Payment detail not found for the specified learner",
+        });
+    }
+
+    res.status(200).send({ data: paymentDetail });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
+
+
+//get a payment detail by payment id
+adminRouter.get("/payment/learner-detail/:paymentId", async (req, res) => {
+    const { paymentId } = req.params;
+  
+    try {
+      const paymentDetail = await PaymentModel.aggregate([
+        {
+          $match: { _id: new mongoose.Types.ObjectId(paymentId) },
+        },
+        {
+          $lookup: {
+            from: "enrollments",
+            localField: "enrollment_Id",
+            foreignField: "_id",
+            as: "enrollment_details",
+          },
+        },
+        {
+          $unwind: "$enrollment_details",
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "learner_Id",
+            foreignField: "_id",
+            as: "user_detail",
+          },
+        },
+        {
+          $unwind: "$user_detail",
+        },
+      ]);
+  
+      if (paymentDetail.length <= 0) {
+        return res
+          .status(404)
+          .send({
+            message: "Payment detail not found for the specified learner",
+          });
+      }
+  
+      res.status(200).send({ data: paymentDetail });
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  });
+
+
+
 module.exports = adminRouter;

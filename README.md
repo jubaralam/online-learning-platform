@@ -1116,3 +1116,137 @@ This documentation describes the API routes provided by the `adminRouter` for ma
 ---
 
 
+
+
+
+# Payment Routes Documentation
+
+## Base URL
+`domain-name/api/admin`
+
+### **Get All Payment Details**
+#### Endpoint
+`GET /payment/details/`
+
+#### Description
+Fetches all payment details, including associated enrollment and learner information.
+
+#### Request
+- **Headers:**
+  - `Authorization`: Bearer token for authentication.
+
+#### Response
+- **200 OK**:
+  ```json
+  {
+    "data": [
+      {
+        "_id": "<paymentId>",
+        "enrollment_Id": "<enrollmentId>",
+        "learner_Id": "<learnerId>",
+        "payment_details": { ... },
+        "user_detail": { ... }
+      }
+    ]
+  }
+  ```
+- **404 Not Found**:
+  ```json
+  {
+    "message": "payment detail not found"
+  }
+  ```
+- **500 Internal Server Error**:
+  ```json
+  {
+    "error": "<error_message>"
+  }
+  ```
+
+---
+
+### **Get All Payments of a Learner**
+#### Endpoint
+`GET /payment/learner-details/:learner_Id`
+
+#### Description
+Fetches all payment and enrollment details for a specific learner.
+
+#### Parameters
+- **Path Parameters:**
+  - `learner_Id`: ObjectId of the learner.
+
+#### Request
+- **Headers:**
+  - `Authorization`: Bearer token for authentication.
+
+#### Response
+- **200 OK**:
+  ```json
+  {
+    "data": [
+      {
+        "_id": "<paymentId>",
+        "enrollment_Id": "<enrollmentId>",
+        "learner_Id": "<learnerId>",
+        "enrollment_details": { ... },
+        "user_detail": { ... }
+      }
+    ]
+  }
+  ```
+- **404 Not Found**:
+  ```json
+  {
+    "message": "Payment detail not found for the specified learner"
+  }
+  ```
+- **500 Internal Server Error**:
+  ```json
+  {
+    "error": "<error_message>"
+  }
+  ```
+
+---
+
+### **Get Payment Detail by Payment ID**
+#### Endpoint
+`GET /payment/learner-detail/:paymentId`
+
+#### Description
+Fetches the payment detail, including associated enrollment and learner details, by payment ID.
+
+#### Parameters
+- **Path Parameters:**
+  - `paymentId`: ObjectId of the payment.
+
+#### Request
+- **Headers:**
+  - `Authorization`: Bearer token for authentication.
+
+#### Response
+- **200 OK**:
+  ```json
+  {
+    "data": {
+      "_id": "<paymentId>",
+      "enrollment_Id": "<enrollmentId>",
+      "learner_Id": "<learnerId>",
+      "enrollment_details": { ... },
+      "user_detail": { ... }
+    }
+  }
+  ```
+- **404 Not Found**:
+  ```json
+  {
+    "message": "Payment detail not found for the specified learner"
+  }
+  ```
+- **500 Internal Server Error**:
+  ```json
+  {
+    "error": "<error_message>"
+  }
+  
