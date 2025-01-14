@@ -39,7 +39,7 @@ server.use(
 
 server.get("/", async (req, res) => {
   try {
-    res.write("welcome to new adge Online Learning Platform");
+    // res.write("welcome to new adge Online Learning Platform");
     res
       .status(200)
       .send({ message: "welcome to new adge Online Learning Platform" });
