@@ -609,3 +609,225 @@ This endpoint allows authorized instructors or admins to delete a course module.
 }
 ```
 
+
+
+
+# Enrollment API Documentation
+
+This documentation describes the endpoints available in the `enrollmentRouter` for managing course enrollments, payments, and retrieving course-related information.
+
+---
+
+## **POST /enroll**
+### **Description:**
+Enroll a learner in a course with payment details.
+
+### **Request Body:**
+```json
+{
+  "course_Id": "<course_id>",
+  "amount": <amount>,
+  "payment_method": "<payment_method>",
+  "payment_Id": "<payment_id>",
+  "gateway_transaction_Id": "<gateway_transaction_id>",
+  "notes": "<notes>"
+}
+```
+### **Response:**
+- **201 Created:**
+```json
+{
+  "message": "Enrollment and payment processed successfully.",
+  "enrollment": { <enrollment_details> },
+  "payment": { <payment_details> }
+}
+```
+- **400 Bad Request:**
+```json
+{
+  "error": "All required fields must be provided."
+}
+```
+- **500 Internal Server Error:**
+```json
+{
+  "error": "<error_message>"
+}
+```
+---
+
+## **GET /course-details/:courseId**
+### **Description:**
+Retrieve details of a specific course.
+
+### **Parameters:**
+- `courseId` (Path Parameter): ID of the course.
+
+### **Response:**
+- **200 OK:**
+```json
+{
+  "data": { <course_details> }
+}
+```
+- **404 Not Found:**
+```json
+{
+  "message": "Course not found."
+}
+```
+- **500 Internal Server Error:**
+```json
+{
+  "error": "<error_message>"
+}
+```
+---
+
+## **GET /get-modules/:courseId**
+### **Description:**
+Retrieve all modules for a specific course.
+
+### **Parameters:**
+- `courseId` (Path Parameter): ID of the course.
+
+### **Response:**
+- **200 OK:**
+```json
+{
+  "data": [ <module_details> ]
+}
+```
+- **404 Not Found:**
+```json
+{
+  "error": "Module not found."
+}
+```
+- **500 Internal Server Error:**
+```json
+{
+  "error": "<error_message>"
+}
+```
+---
+
+## **GET /get-payments/:learnerId**
+### **Description:**
+Retrieve all payments made by a specific learner.
+
+### **Parameters:**
+- `learnerId` (Path Parameter): ID of the learner.
+
+### **Response:**
+- **200 OK:**
+```json
+{
+  "data": [ <payment_records> ]
+}
+```
+- **200 No Content:**
+```json
+{
+  "message": "No Payment Records found."
+}
+```
+- **500 Internal Server Error:**
+```json
+{
+  "error": "<error_message>"
+}
+```
+---
+
+## **GET /payment/:paymentId**
+### **Description:**
+Retrieve detailed information about a specific payment.
+
+### **Parameters:**
+- `paymentId` (Path Parameter): ID of the payment.
+
+### **Response:**
+- **200 OK:**
+```json
+{
+  "data": { <payment_details> }
+}
+```
+- **404 Not Found:**
+```json
+{
+  "message": "Payment not found."
+}
+```
+- **500 Internal Server Error:**
+```json
+{
+  "error": "<error_message>"
+}
+```
+---
+
+## **GET /get-all-courses**
+### **Description:**
+Retrieve all courses a learner is enrolled in.
+
+### **Response:**
+- **200 OK:**
+```json
+{
+  "data": [
+    {
+      "_id": "<enrollment_id>",
+      "course_Id": "<course_id>",
+      "course_details": { <course_data> },
+      "enrollment_date": "<enrollment_date>",
+      "progress_percentage": <progress_percentage>,
+      "learner_Id": "<learner_id>"
+    }
+  ]
+}
+```
+- **404 Not Found:**
+```json
+{
+  "message": "Course not found."
+}
+```
+- **500 Internal Server Error:**
+```json
+{
+  "error": "<error_message>"
+}
+```
+---
+
+## **Models Used:**
+### **EnrollmentModel:**
+- `course_Id`
+- `learner_Id`
+- `status`
+- `enrollment_date`
+- `progress_percentage`
+
+### **PaymentModel:**
+- `payment_Id`
+- `payment_status`
+- `amount`
+- `payment_method`
+- `learner_Id`
+- `enrollment_Id`
+- `gateway_transaction_Id`
+- `notes`
+
+### **CourseModel:**
+- `title`
+- `description`
+- `price`
+- `language`
+- `duration`
+
+---
+
+This API facilitates efficient management of course enrollments, payments, and related details.
+
